@@ -47,7 +47,6 @@ class PageListCustomSort extends WireData implements Module {
 			if(!$field) continue;
 			$sort .= ",sort=" . trim($field);
 		}
-
 		$selector = preg_replace("/, ?sort=_custom/", $sort, $selector);
 		$event->arguments(0, new Selectors($selector));
 	}
@@ -143,7 +142,6 @@ class PageListCustomSort extends WireData implements Module {
 				$sql = "UPDATE pages_sortfields " .
 					   "SET sortfield_custom='$sortfield_custom' " .
 					   "WHERE pages_id=$page->id";
-
 				try {
 					$this->wire()->database->exec($sql);
 				} catch(\Exception $e) {
@@ -169,7 +167,6 @@ class PageListCustomSort extends WireData implements Module {
 	public function ___install() {
 		$sql = "ALTER TABLE pages_sortfields " .
 			   "ADD sortfield_custom text NOT NULL";
-
 		try {
 			$this->wire()->database->exec($sql);
 		} catch(\Exception $e) {
@@ -180,7 +177,6 @@ class PageListCustomSort extends WireData implements Module {
 	public function ___uninstall() {
 		$sql = "ALTER TABLE pages_sortfields " .
 			   "DROP COLUMN sortfield_custom";
-
 		try {
 			$this->wire()->database->exec($sql);
 		} catch(\Exception $e) {
