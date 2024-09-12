@@ -23,12 +23,7 @@ class PageListCustomSort extends WireData implements Module {
 		$selector = $event->arguments(0);
 		/** @var Page $page */
 		$page = $event->arguments(1);
-		$fields = explode(",", $this->getCustomOption($page) ?? "");
-		foreach($fields as $field) {
-			if(!$field) continue;
-			$selector .= ",sort=" . trim($field);
-		}
-		$event->arguments(0, $selector);
+		$event->arguments(0, $selector . $this->getCustomSortSelector($page));
 	}
 
 	public function addCustomSortQuery(HookEvent $event) {
@@ -41,13 +36,11 @@ class PageListCustomSort extends WireData implements Module {
 		$page = $event->pages->get($matches[1]);
 		if(!$page->id) return;
 
-		$sort = "";
-		$fields = explode(",", $this->getCustomOption($page) ?? "");
-		foreach($fields as $field) {
-			if(!$field) continue;
-			$sort .= ",sort=" . trim($field);
-		}
-		$selector = preg_replace("/, ?sort=_custom/", $sort, $selector);
+		$selector = preg_replace(
+			"/, ?sort=_custom/",
+			$this->getCustomSortSelector($page),
+			$selector
+		);
 		$event->arguments(0, new Selectors($selector));
 	}
 
@@ -57,7 +50,7 @@ class PageListCustomSort extends WireData implements Module {
 		/** @var InputfieldWrapper $wrapper */
 		$wrapper = $event->return;
 		if($fieldset = $wrapper->getChildByName("ChildrenSortSettings")) {
-			$this->addCustomOption($fieldset, $this->getCustomOptionPage($page));
+			$this->addCustomOption($fieldset, $this->getCustomSort($page));
 		} elseif($fieldset = $wrapper->getChildByName("ChildrenPageList")) {
 			if(strpos($fieldset->notes, "_custom") !== false) {
 				$fieldset->notes = str_replace("_custom", $page->template->sortfield_custom, $fieldset->notes);
@@ -95,15 +88,22 @@ class PageListCustomSort extends WireData implements Module {
 		$fieldset->add($f);
 	}
 
-	private function getCustomOption(Page $page) {
+	private function getCustomSortSelector(Page $page) {
+		$fields = "";
 		if($page->template->sortfield === "_custom") {
-			return $page->template->sortfield_custom;
+			$fields = $page->template->sortfield_custom ?? "";
 		} elseif($page->sortfield === "_custom") {
-			return $this->getCustomOptionPage($page);
+			$fields = $this->getCustomSort($page);
 		}
+		$sort = "";
+		foreach(explode(",", $fields) as $field) {
+			if(!$field) continue;
+			$sort .= ",sort=" . trim($field);
+		}
+		return $sort;
 	}
 
-	private function getCustomOptionPage(Page $page) {
+	private function getCustomSort(Page $page) {
 		$sortfield_custom = "";
 		$sql = "SELECT sortfield_custom " .
 			   "FROM pages_sortfields " .
