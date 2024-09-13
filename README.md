@@ -2,11 +2,11 @@
 
 This module enables the use of a custom sort setting for children, using multiple properties.
 
+<img width="1680" alt="Screenshot 2024-09-13 at 15 40 17" src="https://github.com/user-attachments/assets/ef160506-48e5-4530-90f1-8addce20db1d">
 
+Modules directory: [https://processwire.com/modules/page-list-custom-sort/](https://processwire.com/modules/page-list-custom-sort/)
 
-Modules directory: 
-
-Support forum:
+Support forum: [https://processwire.com/talk/topic/30410-pagelist-custom-sort/](https://processwire.com/talk/topic/30410-pagelist-custom-sort/)
 
 ## About
 
