@@ -12,25 +12,17 @@ class PageListCustomSort extends WireData implements Module {
 
 	public function init() {
 		$this->addHookBefore("Pages::find", $this, "addCustomSortQuery");
-		$this->addHookBefore("ProcessPageList::find", $this, "addCustomSortFind");
 		$this->addHookAfter("ProcessPageEdit::buildFormChildren", $this, "addCustomOptionPage");
 		$this->addHookAfter("ProcessTemplate::buildEditForm", $this, "addCustomOptionTemplate");
 		$this->addHookAfter("ProcessPageEdit::processInput", $this, "saveCustomOptionPage");
 		$this->addHookBefore("ProcessTemplate::executeSave", $this, "saveCustomOptionTemplate");
 	}
 
-	public function addCustomSortFind(HookEvent $event) {
-		$selector = $event->arguments(0);
-		/** @var Page $page */
-		$page = $event->arguments(1);
-		$event->arguments(0, $selector . $this->getCustomSortSelector($page));
-	}
-
 	public function addCustomSortQuery(HookEvent $event) {
 		$selector = (string) $event->arguments(0);
 		if(strpos($selector, "sort=_custom") === false) return;
 
-		preg_match("/parent_id=(\d+),/", $selector, $matches);
+		preg_match("/(?:parent_id|has_parent)=(\d+),/", $selector, $matches);
 		if(count($matches) <= 1) return;
 
 		$page = $event->pages->get($matches[1]);
