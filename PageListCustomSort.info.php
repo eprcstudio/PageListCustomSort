@@ -9,5 +9,5 @@ $info = [
 	"singular" => true,
 	"autoload" => true,
 	"requires" => "ProcessWire>=3.0.205, PHP>=7.0.0",
-	"icon" => "smile-o"
+	"icon" => "sort"
 ];
