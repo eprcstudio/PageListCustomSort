@@ -146,6 +146,7 @@ class PageListCustomSort extends WireData implements Module {
 	public function saveCustomOptionTemplate(HookEvent $event) {
 		/** @var WireInput $input */
 		$input = $event->input;
+		if(!$input->post("sortfield", ["_custom"])) return;
 		$id = (int) $input->post("id");
 		if(!$id) $id = (int) $input->get("id");
 		/** @var Template $template */
@@ -153,6 +154,7 @@ class PageListCustomSort extends WireData implements Module {
 		$sortfield_custom = $input->post->selectorValue("sortfield_custom", [
 			"useQuotes" => false
 		]);
+		$input->post->set('sortfield_reverse', 0);
 		$template->sortfield_custom = $sortfield_custom;
 	}
 
